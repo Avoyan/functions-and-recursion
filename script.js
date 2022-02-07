@@ -182,3 +182,49 @@ let obj2 = objectDeepClone(obj1);
 obj1.o1.d = 8;
 console.log(obj1);
 console.log(obj2);
+
+///////////////////////////////////////////////////////////////////////
+// throttle function
+console.log("------throttle function------");
+///////////////////////////////////////////////////////////////////////
+function throttle(func, time) {
+  return function (args) {
+    let previousCall = this.lastCall;
+    this.lastCall = Date.now();
+    if (previousCall === undefined || (this.lastCall - previousCall) > time) {
+      func(args);
+    }
+  }
+}
+
+let logger = (args) => console.log(`My args are ${args}`);
+let throttledLogger = throttle(logger, 2000); 
+
+throttledLogger([1]);
+throttledLogger([1, 2]);
+throttledLogger([1, 2, 3]);
+throttledLogger([1, 2, 3, 4]);
+throttledLogger([1, 2, 3, 4, 5]);
+
+///////////////////////////////////////////////////////////////////////
+// debounce function
+console.log("------debounce function------");
+///////////////////////////////////////////////////////////////////////
+function debounce(func, time) {
+  return function (args) {
+    let previousCall = this.lastCall;
+    this.lastCall = Date.now();
+    if (previousCall && ((this.lastCall - previousCall) <= time)) {
+      clearTimeout(this.lastCallTimer);
+    }
+    this.lastCallTimer = setTimeout(() => func(args), time);
+  }
+}
+
+let debouncedLogger = debounce(logger, 0.1);
+
+debouncedLogger([1]);
+debouncedLogger([1, 2]);
+debouncedLogger([1, 2, 3]);
+debouncedLogger([1, 2, 3, 4]);
+debouncedLogger([1, 2, 3, 4, 5]);
